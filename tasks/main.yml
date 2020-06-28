@@ -1,0 +1,94 @@
+---
+# tasks file for demo_aws_vpc
+- name: Create VPC {{ ec2_name_prefix }}-vpc
+  ec2_vpc_net:
+    name: "{{ ec2_name_prefix }}-vpc"
+    cidr_block: "{{ ec2_subnet }}"
+    region: "{{ ec2_region }}"
+  register: create_vpc
+  until: create_vpc is not failed
+  retries: 5
+
+- name: Create security group {{ ec2_name_prefix }}-sg
+  ec2_group:
+    name: "{{ ec2_name_prefix }}-sg"
+    vpc_id: "{{ create_vpc.vpc.id }}"
+    region: "{{ ec2_region }}"
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  when: ec2_vpc_id is undefined
+  register: create_sg
+  until: create_sg is not failed
+  retries: 5
+
+- name: Create subnet {{ ec2_name_prefix }}-subnet
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    az: "{{ ec2_az }}"
+    vpc_id: "{{ create_vpc.vpc.id }}"
+    cidr: "{{ ec2_subnet }}"
+    wait_timeout: 600
+    map_public: yes
+    resource_tags:
+      Name: "{{ ec2_name_prefix }}-subnet"
+      Demonstration: "{{ ec2_name_prefix }}"
+  register: create_subnet
+  when: ec2_vpc_id is undefined
+  until: create_subnet is not failed
+  retries: 15
+
+- name: Create igw {{ ec2_name_prefix }}-igw
+  ec2_vpc_igw:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ create_vpc.vpc.id }}"
+    tags:
+      Name: "{{ ec2_name_prefix }}-igw"
+      Demonstration: "{{ ec2_name_prefix }}"
+  register: create_igw
+  until: create_igw is not failed
+  retries: 15
+  when: ec2_vpc_id is undefined
+
+- name: Create rtb {{ ec2_name_prefix }}-rtb
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ create_vpc.vpc.id }}"
+    subnets:
+      - "{{ create_subnet.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ create_igw.gateway_id }}"
+    tags:
+      Name: "{{ ec2_name_prefix }}-rtb"
+      Demonstration: "{{ ec2_name_prefix }}"
+  register: create_rtb
+  until: create_rtb is not failed
+  retries: 5
+  when: ec2_vpc_id is undefined
+
+- name: Set variables for instance creation
+  set_fact:
+    ec2_vpc_id: "{{ create_vpc.vpc.id }}"
+    ec2_security_group: "{{ ec2_name_prefix }}-sg"
+    ec2_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
+
+- name: Create ssh key pair for workshop {{ ec2_name_prefix }}
+  ec2_key:
+    name: "{{ ec2_name_prefix }}-key"
+    region: "{{ ec2_region }}"
+  register: create_key
+
+- name: Show infra results
+  debug:
+    msg:
+      - "ec2_name_prefix: {{ ec2_name_prefix }}"
+      - "ec2_vpc_id: {{ create_vpc.vpc.id }}"
+      - "private key pair: {{ ec2_name_prefix }}-key"
+      - "ec2_security_group: {{ ec2_name_prefix }}-sg"
+      - "ec2_vpc_subnet_id: {{ create_subnet.subnet.id }}"%
