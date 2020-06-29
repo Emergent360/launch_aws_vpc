@@ -83,12 +83,3 @@
     name: "{{ ec2_name_prefix }}-key"
     region: "{{ ec2_region }}"
   register: create_key
-
-- name: Show infra results
-  debug:
-    msg:
-      - "ec2_name_prefix: {{ ec2_name_prefix }}"
-      - "ec2_vpc_id: {{ create_vpc.vpc.id }}"
-      - "private key pair: {{ ec2_name_prefix }}-key"
-      - "ec2_security_group: {{ ec2_name_prefix }}-sg"
-      - "ec2_vpc_subnet_id: {{ create_subnet.subnet.id }}"%
