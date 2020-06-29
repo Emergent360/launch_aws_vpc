@@ -84,8 +84,8 @@
     msg:
       - "ec2_name_prefix: {{ ec2_name_prefix }}"
       - "ec2 vpc id: {{ create_vpc.vpc.id }}"
-      - "ec2 sg id: {{ create_sg }}"
+      - "ec2 sg id: {{ create_sg.group_id }}"
       - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
-      - "ec2 igw: {{ create_igw }}"
-      - "ec2 rtb: {{ create_rtb }}"
-      - "ec2 key: {{ create_key }}"
+      - "ec2 igw id: {{ create_igw.gateway_id }}"
+      - "ec2 rtb id: {{ create_rtb.route_table_id }}"
+      - "ec2 key name: {{ create_key.name }}"
