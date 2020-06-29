@@ -73,14 +73,19 @@
   retries: 5
   when: ec2_vpc_id is undefined
 
-- name: Set variables for instance creation
-  set_fact:
-    ec2_vpc_id: "{{ create_vpc.vpc.id }}"
-    ec2_security_group: "{{ ec2_name_prefix }}-sg"
-    ec2_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
-
 - name: Create ssh key pair for workshop {{ ec2_name_prefix }}
   ec2_key:
     name: "{{ ec2_name_prefix }}-key"
     region: "{{ ec2_region }}"
   register: create_key
+
+- name: Show VPC components created
+  debug:
+    msg:
+      - "ec2_name_prefix: {{ ec2_name_prefix }}"
+      - "ec2 vpc id: {{ create_vpc.vpc.id }}"
+      - "ec2 sg id: {{ create_sg }}"
+      - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
+      - "ec2 igw: {{ create_igw }}"
+      - "ec2 rtb: {{ create_rtb }}"
+      - "ec2 key: {{ create_key }}"
