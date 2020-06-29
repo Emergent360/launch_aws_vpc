@@ -12,6 +12,7 @@
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
     name: "{{ ec2_name_prefix }}-sg"
+    description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
     rules:
