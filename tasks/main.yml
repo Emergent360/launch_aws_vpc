@@ -1,6 +1,6 @@
 ---
 # tasks file for demo_aws_vpc
-- name: Create VPC {{ ec2_name_prefix }}-vpc
+- name: Create vpc {{ ec2_name_prefix }}-vpc
   ec2_vpc_net:
     name: "{{ ec2_name_prefix }}-vpc"
     cidr_block: "{{ ec2_subnet }}"
@@ -87,5 +87,5 @@
       - "ec2 sg id: {{ create_sg.group_id }}"
       - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
       - "ec2 igw id: {{ create_igw.gateway_id }}"
-      - "ec2 rtb id: {{ create_rtb.route_table_id }}"
+      - "ec2 rtb id: {{ create_rtb.route_table.route_table_id }}"
       - "ec2 key name: {{ create_key.name }}"
