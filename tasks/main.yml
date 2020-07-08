@@ -9,6 +9,10 @@
   until: create_vpc is not failed
   retries: 5
 
+- name: Set all_rules
+  set_fact:
+    all_rules: "{{lookup('template', 'vpc_rules.j2')}}"
+
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
     name: "{{ ec2_name_prefix }}-sg"
