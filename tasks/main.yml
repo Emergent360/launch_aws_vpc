@@ -1,5 +1,5 @@
 ---
-# tasks file for demo_aws_vpc
+# tasks file for launch_aws_vpc
 - name: Create vpc {{ ec2_name_prefix }}-vpc
   ec2_vpc_net:
     name: "{{ ec2_name_prefix }}-vpc"
