@@ -9,24 +9,20 @@
   until: create_vpc is not failed
   retries: 5
 
-#- name: Create security group {{ ec2_name_prefix }}-sg
-#  ec2_group:
-#    name: "{{ ec2_name_prefix }}-sg"
-#    description: "{{ ec2_name_prefix }}-sg"
-#    vpc_id: "{{ create_vpc.vpc.id }}"
-#    region: "{{ ec2_region }}"
-#    rules:
-#      - proto: tcp
-#        from_port: 22
-#        to_port: 22
-#        cidr_ip: 0.0.0.0/0
-#    rules_egress:
-#      - proto: all
-#        cidr_ip: 0.0.0.0/0
-#  when: ec2_vpc_id is undefined
-#  register: create_sg
-#  until: create_sg is not failed
-#  retries: 5
+- name: Create security group {{ ec2_name_prefix }}-sg
+  ec2_group:
+    name: "{{ ec2_name_prefix }}-sg"
+    description: "{{ ec2_name_prefix }}-sg"
+    vpc_id: "{{ create_vpc.vpc.id }}"
+    region: "{{ ec2_region }}"
+    rules: "{{ all_rules }}"
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  when: ec2_vpc_id is undefined
+  register: create_sg
+  until: create_sg is not failed
+  retries: 5
 
 - name: Create subnet {{ ec2_name_prefix }}-subnet
   ec2_vpc_subnet:
@@ -84,7 +80,7 @@
     msg:
       - "ec2_name_prefix: {{ ec2_name_prefix }}"
       - "ec2 vpc id: {{ create_vpc.vpc.id }}"
-#      - "ec2 sg id: {{ create_sg.group_id }}"
+      - "ec2 sg id: {{ create_sg.group_id }}"
       - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
       - "ec2 igw id: {{ create_igw.gateway_id }}"
       - "ec2 rtb id: {{ create_rtb.route_table.route_table_id }}"
