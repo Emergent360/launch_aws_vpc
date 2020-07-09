@@ -15,11 +15,7 @@
     description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
-    rules: 
-      - proto: tcp
-        to_port: 22
-        from_port: 22
-        cidr_ip: 0.0.0.0/0
+    rules: "aws_security_group.{{ group_type }}.rules"
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
