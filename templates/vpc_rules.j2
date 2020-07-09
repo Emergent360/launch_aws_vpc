@@ -1,3 +1,4 @@
 {
-  {{ ssh.ports | to_nice_json }}
+  "all_rules":
+  {{ (ssh.ports) | to_nice_json }}
 }

@@ -9,9 +9,15 @@
   until: create_vpc is not failed
   retries: 5
 
-- name: Set all_rules
-  set_fact:
-    all_rules: "{{lookup('template', 'vpc_rules.j2')}}"
+- name: create file for all AWS security group rules
+  template:
+    src: vpc_rules.j2
+    dest: aws_rules.yml
+  delegate_to: localhost
+  run_once: true
+
+- include_vars:
+    file: aws_rules.yml
 
 - debug:
     msg:
