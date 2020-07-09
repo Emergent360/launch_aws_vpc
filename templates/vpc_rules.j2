@@ -1,10 +1,7 @@
 {
   "all_rules":
-  {% if workshop_type == 'demo' %}
-  {{ (rules.common.ports + rules.f5.ports + rules.network.ports) | to_nice_json }}
-  {% else %}
-  {% if rules[workshop_type].ports is defined %}
-  {{ (rules.common.ports + rules[workshop_type].ports) | to_nice_json }}
+  {% if rules[security_type].ports is defined %}
+  {{ rules[security_type].ports | to_nice_json }}
   {% else %}
   {{ rules.common.ports | to_nice_json }}
   {% endif %}
