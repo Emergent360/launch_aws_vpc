@@ -6,6 +6,22 @@ rules:
         to_port: 22
         from_port: 22
         cidr_ip: 0.0.0.0/0
+  windows:
+    ports:
+      - proto: tcp
+        to_port: 5986
+        from_port: 5986
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        to_port: 3389
+        from_port: 3389
+        cidr_ip: 0.0.0.0/0
+  https:
+    ports:
+      - proto: tcp
+        to_port: 443
+        from_port: 443
+        cidr_ip: 0.0.0.0/0
   common:
     ports:
       - proto: 47
