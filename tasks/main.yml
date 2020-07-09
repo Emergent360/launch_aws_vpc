@@ -9,27 +9,17 @@
   until: create_vpc is not failed
   retries: 5
 
-- name: create file for all AWS security group rules
-  template:
-    src: vpc_rules.j2
-    dest: aws_rules.yml
-  delegate_to: localhost
-  run_once: true
-
-- include_vars:
-    file: aws_rules.yml
-
-- debug:
-    msg:
-      - "all_rules: {{ all_rules }}"
-
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
     name: "{{ ec2_name_prefix }}-sg"
     description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
-    rules: "{{ all_rules }}"
+    rules: 
+      - proto: tcp
+        to_port: 22
+        from_port: 22
+        cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
