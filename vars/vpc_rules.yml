@@ -1,5 +1,5 @@
 ---
-workshops:
+rules:
   common:
     ports:
       - proto: 47
