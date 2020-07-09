@@ -11,7 +11,7 @@
 
 - include_vars:
     file: "vpc_rules.yml"
-    
+
 - name: create file for all AWS security group rules
   template:
     src: vpc_rules.j2
@@ -28,7 +28,7 @@
     description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
-    rules: "aws_security_group.{{ group_type }}.rules"
+    rules: "{{ all_rules }}"
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
