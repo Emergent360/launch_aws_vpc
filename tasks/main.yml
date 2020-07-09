@@ -9,9 +9,6 @@
   until: create_vpc is not failed
   retries: 5
 
-- include_vars:
-    file: "vpc_rules.yml"
-
 - name: create file for all AWS security group rules
   template:
     src: vpc_rules.j2
