@@ -1,7 +1,7 @@
 {
   "all_rules":
-  {% if rules[security_type].ports is defined %}
-  {{ rules[security_type].ports | to_nice_json }}
+  {% if rules[ec2_security_type].ports is defined %}
+  {{ rules[ec2_security_type].ports | to_nice_json }}
   {% else %}
   {{ rules.common.ports | to_nice_json }}
   {% endif %}
