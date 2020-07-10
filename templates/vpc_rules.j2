@@ -1,8 +1,7 @@
 {
   "all_rules":
   {% for group in to_template_ec2_security_groups %}
-  {% if rules[group].ports is defined %}
   {{ rules[group].ports | to_nice_json }}
-  {% endif %}
+  {% if not loop.last %},{% endif %}
   {% endfor %}
 }
