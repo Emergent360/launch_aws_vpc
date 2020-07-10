@@ -20,7 +20,7 @@
 
 - debug:
     msg:
-      "from_template_ec2_security_groups: {{ from_template_ec2_security_groups[ec2_rules] }}"
+      "from_template_ec2_security_groups: {{ from_template_ec2_security_groups }}"
 
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
