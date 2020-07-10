@@ -10,11 +10,13 @@
   retries: 5
 
 - set_fact:
-    from_template: "{{ lookup('template', 'vpc_rules.j2') }}"
+    from_template_ec2_security_groups: "{{ lookup('template', 'vpc_rules.j2') }}"
+  vars:
+    to_template_ec2_security_groups: "{{ ec2_security_groups }}"
 
 - debug:
     msg:
-      "from_template: {{ from_template }}"
+      "from_template_ec2_security_groups: {{ from_template_ec2_security_groups }}"
 
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
@@ -22,7 +24,7 @@
     description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
-    rules: "{{ from_template.all_rules }}"
+    rules: "{{ from_template_ec2_security_groups.all_rules }}"
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
