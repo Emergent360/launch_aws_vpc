@@ -3,6 +3,6 @@
   {% for type in rules[ec2_security_type] %}
   {% if type.ports is defined %}
   {{ rules[ec2_security_type].ports | to_nice_json }}
-  {% endfor %}
   {% endif %}
+  {% endfor %}
 }
