@@ -16,11 +16,11 @@
 - set_fact:
     from_template_ec2_security_groups: "{{ lookup('template', 'vpc_rules.j2') }}"
   vars:
-    to_template_ec2_security_groups: "{{ ec2_security_groups[ec2_rules] }}"
+    to_template_ec2_security_groups: "{{ ec2_security_groups }}"
 
 - debug:
     msg:
-      "from_template_ec2_security_groups: {{ from_template_ec2_security_groups }}"
+      "from_template_ec2_security_groups: {{ from_template_ec2_security_groups[ec2_rules] }}"
 
 - name: Create security group {{ ec2_name_prefix }}-sg
   ec2_group:
