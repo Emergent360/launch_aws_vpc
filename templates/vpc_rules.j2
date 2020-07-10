@@ -1,11 +1,7 @@
 {
   "ec2_rules":
   {% for group in to_template_ec2_security_groups %}
-  {
-    "cidr_ip": "{{ ec2_rules[group].rules.cidr_ip }}",
-    "from_port": "{{ ec2_rules[group].rules.from_port }}",
-    "proto": "{{ ec2_rules[group].rules.proto }}",
-    "to_port": {{ ec2_rules[group].rules.to_port }}
+  {{ ec2_rules[group].rules | to_nice_json }}
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 }
