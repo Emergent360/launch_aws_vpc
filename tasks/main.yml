@@ -16,7 +16,7 @@
 - set_fact:
     from_template_ec2_security_groups: "{{ lookup('template', 'vpc_rules.j2') }}"
   vars:
-    to_template_ec2_security_groups: "{{ ec2_security_groups }}"
+    to_template_ec2_security_groups: "{{ ec2_security_groups[ec2_rules] }}"
 
 - debug:
     msg:
