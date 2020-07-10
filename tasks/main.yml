@@ -9,6 +9,10 @@
   until: create_vpc is not failed
   retries: 5
 
+- debug:
+    msg:
+      "ec2_security_groups: {{ ec2_security_groups }}"
+
 - set_fact:
     from_template_ec2_security_groups: "{{ lookup('template', 'vpc_rules.j2') }}"
   vars:
