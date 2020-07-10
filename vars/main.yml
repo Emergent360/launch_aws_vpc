@@ -1,7 +1,7 @@
 ---
 # vars file for launch_aws_vpc
 # ec2 security group defs
-ec2_rules:
+all_rules:
   ssh:
     rules:
       - proto: tcp
