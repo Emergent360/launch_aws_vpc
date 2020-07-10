@@ -3,13 +3,13 @@
 # ec2 security group defs
 rules:
   ssh:
-    rules:
+    ports:
       - proto: tcp
         to_port: 22
         from_port: 22
         cidr_ip: 0.0.0.0/0
   windows:
-    rules:
+    ports:
       - proto: tcp
         to_port: 5986
         from_port: 5986
@@ -19,7 +19,7 @@ rules:
         from_port: 3389
         cidr_ip: 0.0.0.0/0
   https:
-    rules:
+    ports:
       - proto: tcp
         to_port: 443
         from_port: 443
