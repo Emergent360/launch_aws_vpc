@@ -24,7 +24,7 @@
     description: "{{ ec2_name_prefix }}-sg"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
-    rules: "{{ from_template_ec2_security_groups.all_rules }}"
+    rules: "{{ from_template_ec2_security_groups.ec2_rules }}"
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
