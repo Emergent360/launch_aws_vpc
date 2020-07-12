@@ -78,6 +78,13 @@
     region: "{{ ec2_region }}"
   register: create_key
 
+- name: Save private key
+  copy:
+    content: "{{ create_key.key.private_key }}"
+    dest: "/var/lib/awx/.ssh/{{ ec2_name_prefix }}-private.pem"
+    mode: '0400'
+  when: create_key.changed
+
 - name: Show VPC components created
   debug:
     msg:
