@@ -72,19 +72,6 @@
   retries: 5
   when: ec2_vpc_id is undefined
 
-#- name: Create ssh key pair for workshop {{ ec2_name_prefix }}
-#  ec2_key:
-#    name: "{{ ec2_name_prefix }}-key"
-#    region: "{{ ec2_region }}"
-#  register: create_key
-#
-#- name: Save private key
-#  copy:
-#    content: "{{ create_key.key.private_key }}"
-#    dest: "/var/lib/awx/.ssh/{{ ec2_name_prefix }}-private.pem"
-#    mode: '0400'
-#  when: create_key.changed
-
 - name: Show VPC components created
   debug:
     msg:
@@ -94,4 +81,3 @@
       - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
       - "ec2 igw id: {{ create_igw.gateway_id }}"
       - "ec2 rtb id: {{ create_rtb.route_table.route_table_id }}"
-      - "ec2 key name: {{ create_key.key.name }}"
