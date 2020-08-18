@@ -54,6 +54,9 @@
       | list
       | unique }}"
 
+- debug:
+    msg: "{{ subnet_ids }}"
+
 - name: Create igw {{ ec2_name_prefix }}-igw
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
