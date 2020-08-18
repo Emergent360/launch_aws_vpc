@@ -38,7 +38,6 @@
     map_public: yes
     resource_tags:
       Name: "{{ ec2_name_prefix }}-subnet"
-      Demonstration: "{{ ec2_name_prefix }}"
   register: create_subnet
   when: ec2_vpc_id is undefined
   until: create_subnet is not failed
