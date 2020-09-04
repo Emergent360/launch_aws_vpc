@@ -33,7 +33,7 @@
     region: "{{ ec2_region }}"
     az: "{{ ec2_az }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
-    cidr: "{{ ec2_subnet }}"
+    cidr: "{{ ec2_cidr_prefix }}.{{ ec2_subnet_base }}.0.0/24"
     wait_timeout: 600
     map_public: yes
     resource_tags:
