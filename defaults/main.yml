@@ -12,4 +12,4 @@ ec2_subnet_base:
   Empire: 40
   Tatooine: 50
   Naboo: 60
-ec2_wait: true
+ec2_security_type: ssh
