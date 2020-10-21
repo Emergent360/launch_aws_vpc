@@ -45,7 +45,7 @@
   retries: 5
 
 - debug:
-    msg: "{{ create_subnet }}"
+    msg: "{{ create_subnet.results }}"
 
 - name: Get subnet ids
   set_fact:
