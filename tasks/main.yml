@@ -44,9 +44,6 @@
   until: create_subnet is not failed
   retries: 5
 
-- debug:
-    msg: "{{ create_subnet.results }}"
-
 - name: Get subnet ids
   set_fact:
     subnet_ids: "{{ create_subnet.results
@@ -54,6 +51,9 @@
       | map(attribute='subnet.id')
       | list
       | unique }}"
+
+- debug:
+    msg: "{{ subnet_ids }}"
 
 - name: Create igw {{ ec2_name_prefix }}-igw
   ec2_vpc_igw:
