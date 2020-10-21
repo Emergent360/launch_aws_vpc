@@ -46,10 +46,14 @@
 
 - debug:
     msg: "{{ create_subnet }}"
-    
+
 - name: Get subnet ids
   set_fact:
-    subnet_ids: "{{ create_subnet.subnet.id }}"
+    subnet_ids: "{{ create_subnet.results
+      | selectattr('subnet.id', 'defined')
+      | map(attribute='subnet.id')
+      | list
+      | unique }}"
 
 - name: Create igw {{ ec2_name_prefix }}-igw
   ec2_vpc_igw:
