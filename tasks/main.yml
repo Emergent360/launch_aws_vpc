@@ -3,7 +3,7 @@
 - name: Create vpc {{ ec2_name_prefix }}-vpc
   ec2_vpc_net:
     name: "{{ ec2_name_prefix }}-vpc"
-    cidr_block: "{{ ec2_cidr_prefix }}.0.0/16"
+    cidr_block: "{{ ec2_cidr_prefix[ec2_name_prefix] }}.0.0/16"
     region: "{{ ec2_region }}"
   register: create_vpc
   until: create_vpc is not failed
@@ -33,11 +33,12 @@
     region: "{{ ec2_region }}"
     az: "{{ ec2_az }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
-    cidr: "{{ ec2_cidr_prefix }}.{{ ec2_subnet_base[ec2_name_prefix] }}.0/24"
+    cidr: "{{ ec2_cidr_prefix[ec2_name_prefix] }}.{{ item }}.0/24"
     wait_timeout: 600
     map_public: yes
     resource_tags:
-      Name: "{{ ec2_name_prefix }}-subnet"
+      Name: "{{ ec2_name_prefix }}-subnet-{{ item }}"
+  loop: "{{ range(0, num_subnets )|list }}"
   register: create_subnet
   when: ec2_vpc_id is undefined
   until: create_subnet is not failed
@@ -45,7 +46,14 @@
 
 - name: Get subnet ids
   set_fact:
-    subnet_ids: "{{ create_subnet.subnet.id }}"
+    subnet_ids: "{{ create_subnet.results
+      | selectattr('subnet.id', 'defined')
+      | map(attribute='subnet.id')
+      | list
+      | unique }}"
+
+- debug:
+    msg: "{{ subnet_ids }}"
 
 - name: Create igw {{ ec2_name_prefix }}-igw
   ec2_vpc_igw:
@@ -63,14 +71,12 @@
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
-    subnets:
-      - "{{ subnet_ids }}"
+    subnets: "{{ subnet_ids }}"
     routes:
       - dest: 0.0.0.0/0
         gateway_id: "{{ create_igw.gateway_id }}"
     tags:
       Name: "{{ ec2_name_prefix }}-rtb"
-      Demonstration: "{{ ec2_name_prefix }}"
   register: create_rtb
   until: create_rtb is not failed
   retries: 5
@@ -79,9 +85,9 @@
 - name: Show VPC components created
   debug:
     msg:
-      - "ec2_name_prefix: {{ ec2_name_prefix }}"
+      - "ec2 name prefix: {{ ec2_name_prefix }}"
       - "ec2 vpc id: {{ create_vpc.vpc.id }}"
       - "ec2 sg id: {{ create_sg.group_id }}"
-      - "ec2 vpc subnet id: {{ create_subnet.subnet.id }}"
+      - "ec2 vpc subnet ids: {{ subnet_ids }}"
       - "ec2 igw id: {{ create_igw.gateway_id }}"
       - "ec2 rtb id: {{ create_rtb.route_table.route_table_id }}"
