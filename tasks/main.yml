@@ -52,9 +52,6 @@
       | list
       | unique }}"
 
-- debug:
-    msg: "{{ subnet_ids }}"
-
 - name: Create igw {{ ec2_name_prefix }}-igw
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
@@ -81,13 +78,3 @@
   until: create_rtb is not failed
   retries: 5
   when: ec2_vpc_id is undefined
-
-- name: Show VPC components created
-  debug:
-    msg:
-      - "ec2 name prefix: {{ ec2_name_prefix }}"
-      - "ec2 vpc id: {{ create_vpc.vpc.id }}"
-      - "ec2 sg id: {{ create_sg.group_id }}"
-      - "ec2 vpc subnet ids: {{ subnet_ids }}"
-      - "ec2 igw id: {{ create_igw.gateway_id }}"
-      - "ec2 rtb id: {{ create_rtb.route_table.route_table_id }}"
