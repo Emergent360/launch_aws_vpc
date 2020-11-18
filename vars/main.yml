@@ -48,12 +48,6 @@ rules:
         to_port: 443
         from_port: 443
         cidr_ip: 0.0.0.0/0
-    ssh:
-    ports:
-      - proto: tcp
-        to_port: 22
-        from_port: 22
-        cidr_ip: 0.0.0.0/0
   all:
     ports:
       - proto: tcp
