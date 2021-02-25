@@ -28,7 +28,7 @@
   until: create_sg is not failed
   retries: 5
 
-- name: Create subnet {{ ec2_name_prefix }}-Public
+- name: Create subnet {{ ec2_name_prefix }}-Public-A
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     az: "{{ ec2_az }}"
@@ -37,7 +37,7 @@
     wait_timeout: 600
     map_public: yes
     resource_tags:
-      Name: "{{ ec2_name_prefix }}-Public"
+      Name: "{{ ec2_name_prefix }}-Public-A"
   register: create_subnet
   when: ec2_vpc_id is undefined
   until: create_subnet is not failed
