@@ -13,10 +13,10 @@
   set_fact:
     from_template: "{{ lookup('template', 'vpc_rules.j2') }}"
 
-- name: Create security group {{ ec2_name_prefix }}-sg
+- name: Create security group {{ ec2_name_prefix }}-Public-SG
   ec2_group:
-    name: "{{ ec2_name_prefix }}-sg"
-    description: "{{ ec2_name_prefix }}-sg"
+    name: "{{ ec2_name_prefix }}-Public-SG"
+    description: "{{ ec2_name_prefix }}-Public-SG"
     vpc_id: "{{ create_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
     rules: "{{ from_template.all_rules }}"
@@ -28,17 +28,16 @@
   until: create_sg is not failed
   retries: 5
 
-- name: Create subnet {{ ec2_name_prefix }}-subnet
+- name: Create subnet {{ ec2_name_prefix }}-Public
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     az: "{{ ec2_az }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
-    cidr: "{{ ec2_cidr_prefix[ec2_name_prefix] }}.{{ item }}.0/24"
+    cidr: "{{ ec2_cidr_prefix[ec2_name_prefix] }}.0.0/24"
     wait_timeout: 600
     map_public: yes
     resource_tags:
-      Name: "{{ ec2_name_prefix }}-subnet-{{ item }}"
-  loop: "{{ range(0, num_subnets )|list }}"
+      Name: "{{ ec2_name_prefix }}-Public"
   register: create_subnet
   when: ec2_vpc_id is undefined
   until: create_subnet is not failed
@@ -52,19 +51,19 @@
       | list
       | unique }}"
 
-- name: Create igw {{ ec2_name_prefix }}-igw
+- name: Create igw {{ ec2_name_prefix }}-Gateway
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
     tags:
-      Name: "{{ ec2_name_prefix }}-igw"
+      Name: "{{ ec2_name_prefix }}-Gateway"
       Demonstration: "{{ ec2_name_prefix }}"
   register: create_igw
   until: create_igw is not failed
   retries: 15
   when: ec2_vpc_id is undefined
 
-- name: Create rtb {{ ec2_name_prefix }}-rtb
+- name: Create rtb {{ ec2_name_prefix }}-RouteTable
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
@@ -73,7 +72,7 @@
       - dest: 0.0.0.0/0
         gateway_id: "{{ create_igw.gateway_id }}"
     tags:
-      Name: "{{ ec2_name_prefix }}-rtb"
+      Name: "{{ ec2_name_prefix }}-RouteTable"
   register: create_rtb
   until: create_rtb is not failed
   retries: 5
