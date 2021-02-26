@@ -71,7 +71,7 @@
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ create_vpc.vpc.id }}"
-    subnets: "{{ subnet_ids }}"
+    subnets: "{{ subnet_id }}"
     routes:
       - dest: 0.0.0.0/0
         gateway_id: "{{ create_igw.gateway_id }}"
