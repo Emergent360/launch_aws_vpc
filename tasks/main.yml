@@ -43,7 +43,7 @@
   until: create_subnet is not failed
   retries: 5
 
-debug:
+- debug:
   msg: "{{ create_subnet }}"
 
 - name: Get subnet ids
