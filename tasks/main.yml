@@ -43,9 +43,6 @@
   until: create_subnet is not failed
   retries: 5
 
-- debug:
-    msg: "{{ create_subnet }}"
-
 - name: Get subnet ids
   set_fact:
     subnet_id: "{{ create_subnet.subnet.id }}"
